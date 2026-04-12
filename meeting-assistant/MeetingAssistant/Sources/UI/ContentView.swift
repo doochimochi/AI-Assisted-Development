@@ -48,6 +48,7 @@ struct ContentView: View {
                         Task { await coordinator.startSession(scenario: selectedScenario) }
                     }
                     .environmentObject(coordinator.memoryManager)
+                    .environmentObject(settings)
                 } else {
                     // --- Error banner ---
                     if let error = coordinator.error {

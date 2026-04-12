@@ -1,5 +1,4 @@
-import Foundation
-import ScreenSaver
+import AppKit  // CGPreflightScreenCaptureAccess, CGRequestScreenCaptureAccess are CoreGraphics, available via AppKit
 
 @MainActor
 final class AudioPermissionManager: ObservableObject {

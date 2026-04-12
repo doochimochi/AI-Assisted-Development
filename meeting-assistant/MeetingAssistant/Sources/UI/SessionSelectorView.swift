@@ -3,12 +3,22 @@ import SwiftUI
 struct SessionSelectorView: View {
     @EnvironmentObject var coordinator: MeetingCoordinator
     @EnvironmentObject var memoryManager: SessionMemoryManager
+    @EnvironmentObject var settings: AppSettings
+    @ObservedObject private var permissions = AudioPermissionManager.shared
 
     @Binding var selectedScenario: MeetingScenario
     let onStart: () -> Void
 
+    private var blockers: [String] {
+        var list: [String] = []
+        if settings.anthropicApiKey.isEmpty { list.append("Anthropic API key") }
+        if settings.deepgramApiKey.isEmpty  { list.append("Deepgram API key") }
+        if !permissions.screenRecordingGranted { list.append("Screen Recording permission") }
+        return list
+    }
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 14) {
             Text("Select Scenario")
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundColor(.white)
@@ -23,6 +33,43 @@ struct SessionSelectorView: View {
                         selectedScenario = scenario
                     }
                 }
+            }
+
+            // Blockers — shown prominently if anything is missing
+            if !blockers.isEmpty {
+                VStack(alignment: .leading, spacing: 6) {
+                    ForEach(blockers, id: \.self) { blocker in
+                        HStack(spacing: 6) {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .font(.system(size: 10))
+                                .foregroundColor(.yellow)
+                            Text("Missing: \(blocker)")
+                                .font(.system(size: 11))
+                                .foregroundColor(.yellow.opacity(0.9))
+                        }
+                    }
+
+                    if !permissions.screenRecordingGranted {
+                        Button {
+                            permissions.requestScreenRecordingPermission()
+                            NSWorkspace.shared.open(
+                                URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture")!
+                            )
+                        } label: {
+                            Text("Open Screen Recording Settings →")
+                                .font(.system(size: 11, weight: .medium))
+                                .foregroundColor(.cyan)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(8)
+                .background(Color.yellow.opacity(0.08))
+                .cornerRadius(7)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 7)
+                        .stroke(Color.yellow.opacity(0.25), lineWidth: 0.5)
+                )
             }
 
             // Related previous sessions
@@ -59,29 +106,24 @@ struct SessionSelectorView: View {
 
             Spacer()
 
+            let canStart = blockers.isEmpty
             Button(action: onStart) {
                 HStack {
-                    Image(systemName: "mic.fill")
+                    Image(systemName: canStart ? "mic.fill" : "lock.fill")
                     Text("Start \(selectedScenario.displayName)")
                 }
                 .font(.system(size: 13, weight: .medium))
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 8)
-                .background(Color.green.opacity(0.8))
+                .background(canStart ? Color.green.opacity(0.85) : Color.gray.opacity(0.3))
                 .cornerRadius(8)
-                .foregroundColor(.black)
+                .foregroundColor(canStart ? .black : .white.opacity(0.4))
             }
             .buttonStyle(.plain)
-            .disabled(!AppSettings.shared.isConfigured)
-
-            if !AppSettings.shared.isConfigured {
-                Text("⚠ Add API keys in Settings first")
-                    .font(.system(size: 11))
-                    .foregroundColor(.yellow.opacity(0.8))
-                    .frame(maxWidth: .infinity, alignment: .center)
-            }
+            .disabled(!canStart)
         }
         .padding(12)
+        .onAppear { permissions.checkPermissions() }
     }
 }
 
