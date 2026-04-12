@@ -1,0 +1,3 @@
+-keep class com.meetingassistant.** { *; }
+-keep class com.squareup.moshi.** { *; }
+-keepclassmembers class * { @com.squareup.moshi.Json *; }
