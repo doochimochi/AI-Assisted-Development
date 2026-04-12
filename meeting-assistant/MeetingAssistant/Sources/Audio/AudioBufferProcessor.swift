@@ -1,5 +1,5 @@
 import Foundation
-import AVFoundation
+@preconcurrency import AVFoundation
 import CoreMedia
 
 actor AudioBufferProcessor {
@@ -68,7 +68,8 @@ private extension CMSampleBuffer {
     func asPCMBuffer() -> AVAudioPCMBuffer? {
         guard let formatDesc = CMSampleBufferGetFormatDescription(self) else { return nil }
         guard let streamDesc = CMAudioFormatDescriptionGetStreamBasicDescription(formatDesc) else { return nil }
-        guard let format = AVAudioFormat(streamDescription: streamDesc.pointee) else { return nil }
+        // streamDesc is UnsafePointer<AudioStreamBasicDescription> — pass directly, not .pointee
+        guard let format = AVAudioFormat(streamDescription: streamDesc) else { return nil }
 
         let frameCount = CMSampleBufferGetNumSamples(self)
         guard let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(frameCount)) else { return nil }

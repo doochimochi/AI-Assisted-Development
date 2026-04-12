@@ -21,7 +21,7 @@ final class WordResearcher: ObservableObject {
         lastResearchTime = now
         recentlyResearched.insert(term.lowercased())
 
-        var entry = WordEntry(term: term, context: transcript)
+        let entry = WordEntry(term: term, context: transcript)
         entries.insert(entry, at: 0)
         // Keep max 10 entries in memory
         if entries.count > 10 { entries.removeLast() }

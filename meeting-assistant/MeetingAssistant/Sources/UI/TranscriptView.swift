@@ -17,7 +17,7 @@ struct TranscriptView: View {
                 }
                 .padding(.horizontal, 4)
             }
-            .onChange(of: store.segments.count) { _ in
+            .onChange(of: store.segments.count) { _, _ in
                 if let last = store.segments.last {
                     withAnimation(.linear(duration: 0.1)) {
                         proxy.scrollTo(last.id, anchor: .bottom)

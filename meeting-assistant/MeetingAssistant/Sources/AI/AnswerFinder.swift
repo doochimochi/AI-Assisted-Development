@@ -16,7 +16,7 @@ final class AnswerFinder: ObservableObject {
         lastAnswerTime = now
 
         let question = segment.text
-        var entry = AnswerEntry(question: question)
+        let entry = AnswerEntry(question: question)
         entries.insert(entry, at: 0)
         if entries.count > 5 { entries.removeLast() }
 
