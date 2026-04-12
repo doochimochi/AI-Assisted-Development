@@ -39,7 +39,11 @@ final class AudioCaptureManager: NSObject, ObservableObject {
 
         audioDataStream = await bufferProcessor.makeStream()
 
+        // Register BOTH audio and screen output handlers.
+        // SCStream always sends screen frames even when we only want audio.
+        // Without a screen handler registered, it logs "stream output NOT found. Dropping frame".
         try stream.addStreamOutput(self, type: .audio, sampleHandlerQueue: audioQueue)
+        try stream.addStreamOutput(self, type: .screen, sampleHandlerQueue: audioQueue)
         try await stream.startCapture()
 
         self.stream = stream
