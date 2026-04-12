@@ -4,7 +4,8 @@ import AppKit
 final class OverlayWindow: NSPanel {
     override var canBecomeKey: Bool { true }
     override var canBecomeMain: Bool { false }
-    override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
+    // acceptsFirstMouse is an NSView method, not NSWindow/NSPanel.
+    // .nonactivatingPanel styleMask already ensures clicks register without stealing focus.
 
     convenience init(contentRect: NSRect) {
         self.init(
@@ -19,5 +20,7 @@ final class OverlayWindow: NSPanel {
         backgroundColor = .clear
         hasShadow = true
         isMovableByWindowBackground = false
+        // Allow clicks in overlay buttons without activating the app
+        acceptsMouseMovedEvents = true
     }
 }
