@@ -1,22 +1,20 @@
-# Xcode
-*.xcworkspace/xcuserdata/
-*.xcodeproj/xcuserdata/
-*.xcodeproj/project.xcworkspace/xcuserdata/
-DerivedData/
-build/
-*.ipa
-*.dSYM.zip
-*.dSYM
+# Xcode generated project (regenerate with: xcodegen generate)
+MeetingAssistant/MeetingAssistant.xcodeproj
 
-# Swift Package Manager
+# Xcode user data
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+DerivedData/
 .build/
-.swiftpm/
+build/
 
 # macOS
 .DS_Store
-*.swp
-*~
 
-# API keys / secrets — never commit
+# SPM
+.swiftpm/
+Package.resolved
+
+# Secrets (never commit)
 .env
-secrets.json
+*.pem
