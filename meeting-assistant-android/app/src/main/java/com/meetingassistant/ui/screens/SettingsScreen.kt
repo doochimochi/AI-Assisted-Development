@@ -16,7 +16,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.meetingassistant.ui.theme.*
 import com.meetingassistant.viewmodel.SettingsStore
@@ -30,19 +29,19 @@ fun SettingsScreen(nav: NavController) {
     val store = remember { SettingsStore(context) }
     val scope = rememberCoroutineScope()
 
-    var anthropicKey by remember { mutableStateOf("") }
-    var deepgramKey  by remember { mutableStateOf("") }
-    var obsidianUrl  by remember { mutableStateOf("") }
-    var obsidianKey  by remember { mutableStateOf("") }
-    var vaultFolder  by remember { mutableStateOf("Meetings") }
-    var saved        by remember { mutableStateOf(false) }
+    var anthropicKey   by remember { mutableStateOf("") }
+    var googleSpeechKey by remember { mutableStateOf("") }
+    var obsidianUrl    by remember { mutableStateOf("") }
+    var obsidianKey    by remember { mutableStateOf("") }
+    var vaultFolder    by remember { mutableStateOf("Meetings") }
+    var saved          by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        anthropicKey = store.anthropicApiKey.first()
-        deepgramKey  = store.deepgramApiKey.first()
-        obsidianUrl  = store.obsidianApiUrl.first()
-        obsidianKey  = store.obsidianApiKey.first()
-        vaultFolder  = store.obsidianVaultFolder.first()
+        anthropicKey    = store.anthropicApiKey.first()
+        googleSpeechKey = store.googleSpeechApiKey.first()
+        obsidianUrl     = store.obsidianApiUrl.first()
+        obsidianKey     = store.obsidianApiKey.first()
+        vaultFolder     = store.obsidianVaultFolder.first()
     }
 
     Scaffold(
@@ -69,7 +68,9 @@ fun SettingsScreen(nav: NavController) {
             SectionHeader("AI APIs")
 
             SecretField("Anthropic API Key", "sk-ant-...", anthropicKey) { anthropicKey = it }
-            SecretField("Deepgram API Key", "...", deepgramKey) { deepgramKey = it }
+            SecretField("Google Speech API Key", "AIza...", googleSpeechKey) { googleSpeechKey = it }
+
+            HelpText("Google Speech API key: console.cloud.google.com → APIs & Services → Credentials → Create API Key. Enable 'Cloud Speech-to-Text API' in the project.")
 
             Divider(color = DarkCard)
             SectionHeader("Obsidian Sync")
@@ -85,7 +86,7 @@ fun SettingsScreen(nav: NavController) {
             Button(
                 onClick = {
                     scope.launch {
-                        store.save(anthropicKey, deepgramKey, obsidianUrl, obsidianKey, vaultFolder)
+                        store.save(anthropicKey, googleSpeechKey, obsidianUrl, obsidianKey, vaultFolder)
                         saved = true
                     }
                 },

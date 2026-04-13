@@ -29,9 +29,9 @@ struct SettingsView: View {
                     value: $settings.anthropicApiKey
                 )
                 SecureSettingsField(
-                    label: "Deepgram API Key",
-                    placeholder: "Token ...",
-                    value: $settings.deepgramApiKey
+                    label: "Google Speech API Key",
+                    placeholder: "AIza...",
+                    value: $settings.googleSpeechApiKey
                 )
             }
 
@@ -61,7 +61,7 @@ struct SettingsView: View {
             .toggleStyle(.switch)
 
             Toggle(isOn: $settings.useCloudSTT) {
-                Text("Cloud STT (Deepgram) — recommended")
+                Text("Cloud STT (Google Speech) — recommended")
                     .font(.system(size: 12))
                     .foregroundColor(.white.opacity(0.8))
             }

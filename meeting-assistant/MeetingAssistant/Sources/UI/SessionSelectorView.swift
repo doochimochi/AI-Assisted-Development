@@ -11,8 +11,8 @@ struct SessionSelectorView: View {
 
     private var blockers: [String] {
         var list: [String] = []
-        if settings.anthropicApiKey.isEmpty { list.append("Anthropic API key") }
-        if settings.deepgramApiKey.isEmpty  { list.append("Deepgram API key") }
+        if settings.anthropicApiKey.isEmpty    { list.append("Anthropic API key") }
+        if settings.googleSpeechApiKey.isEmpty { list.append("Google Speech API key") }
         if !permissions.screenRecordingGranted { list.append("Screen Recording permission") }
         return list
     }

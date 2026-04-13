@@ -6,7 +6,7 @@ final class AppSettings: ObservableObject {
     static let shared = AppSettings()
 
     @Published var anthropicApiKey: String = ""
-    @Published var deepgramApiKey: String = ""
+    @Published var googleSpeechApiKey: String = ""
     @Published var overlayOpacity: Double = 0.92
     @Published var overlayWidth: CGFloat = 380
     @Published var useCloudSTT: Bool = true  // false = WhisperKit (offline, high RAM)
@@ -27,8 +27,8 @@ final class AppSettings: ObservableObject {
         maxTranscriptMinutes = defaults.integer(forKey: "maxTranscriptMinutes").nonZeroOr(10)
         anthropicApiKey = readFromKeychain(service: "MeetingAssistant", account: "anthropicApiKey")
             ?? ProcessInfo.processInfo.environment["ANTHROPIC_API_KEY"] ?? ""
-        deepgramApiKey = readFromKeychain(service: "MeetingAssistant", account: "deepgramApiKey")
-            ?? ProcessInfo.processInfo.environment["DEEPGRAM_API_KEY"] ?? ""
+        googleSpeechApiKey = readFromKeychain(service: "MeetingAssistant", account: "googleSpeechApiKey")
+            ?? ProcessInfo.processInfo.environment["GOOGLE_SPEECH_API_KEY"] ?? ""
     }
 
     func save() {
@@ -40,13 +40,13 @@ final class AppSettings: ObservableObject {
         if !anthropicApiKey.isEmpty {
             saveToKeychain(service: "MeetingAssistant", account: "anthropicApiKey", value: anthropicApiKey)
         }
-        if !deepgramApiKey.isEmpty {
-            saveToKeychain(service: "MeetingAssistant", account: "deepgramApiKey", value: deepgramApiKey)
+        if !googleSpeechApiKey.isEmpty {
+            saveToKeychain(service: "MeetingAssistant", account: "googleSpeechApiKey", value: googleSpeechApiKey)
         }
     }
 
     var isConfigured: Bool {
-        !anthropicApiKey.isEmpty && !deepgramApiKey.isEmpty
+        !anthropicApiKey.isEmpty && !googleSpeechApiKey.isEmpty
     }
 
     // MARK: - Keychain

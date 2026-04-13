@@ -15,7 +15,7 @@ import com.meetingassistant.audio.AudioRecorder
 import com.meetingassistant.memory.SessionEntity
 import com.meetingassistant.obsidian.ObsidianClient
 import com.meetingassistant.obsidian.WikiFormatter
-import com.meetingassistant.transcription.DeepgramClient
+import com.meetingassistant.transcription.GoogleSpeechClient
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.time.Instant
@@ -59,10 +59,10 @@ class SessionViewModel(application: Application) : AndroidViewModel(application)
     private val _uiState = MutableStateFlow(SessionUiState())
     val uiState: StateFlow<SessionUiState> = _uiState.asStateFlow()
 
-    private val transcriptBuffer = mutableListOf<String>()
+    private val transcriptBuffer = mutableListOf<TranscriptSegment>()
     private var sessionStartTime: Long = 0
     private var audioRecorder: AudioRecorder? = null
-    private var deepgramClient: DeepgramClient? = null
+    private var googleSpeechClient: GoogleSpeechClient? = null
     private var pipelineJob: Job? = null
     private var previousContext: String? = null
 
@@ -76,29 +76,23 @@ class SessionViewModel(application: Application) : AndroidViewModel(application)
             previousContext = db.sessionDao().getLatestByScenario(scenario.name)
                 ?.let { "Previous ${it.scenarioName} (${it.formattedDate}):\n${it.summary}" }
 
-            val deepgramKey = settings.deepgramApiKey.first()
-            if (deepgramKey.isBlank()) {
-                _uiState.update { it.copy(error = "Deepgram API key not set. Go to Settings.") }
+            val googleKey = settings.googleSpeechApiKey.first()
+            if (googleKey.isBlank()) {
+                _uiState.update { it.copy(error = "Google Speech API key not set. Go to Settings.") }
                 return@launch
             }
 
             val recorder = AudioRecorder()
             audioRecorder = recorder
 
-            val client = DeepgramClient(deepgramKey)
-            deepgramClient = client
-
-            try {
-                client.connect()
-            } catch (e: Exception) {
-                _uiState.update { it.copy(error = "STT connection failed: ${e.message}") }
-                return@launch
-            }
+            val client = GoogleSpeechClient(googleKey)
+            googleSpeechClient = client
+            client.connect()
 
             _uiState.update { it.copy(isRecording = true) }
 
             pipelineJob = viewModelScope.launch {
-                // Send audio to Deepgram
+                // Send audio to Google Speech
                 launch {
                     recorder.audioFlow.collect { chunk ->
                         client.send(chunk)
@@ -152,9 +146,9 @@ class SessionViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch {
             pipelineJob?.cancel()
             audioRecorder?.stop()
-            deepgramClient?.disconnect()
+            googleSpeechClient?.disconnect()
             audioRecorder = null
-            deepgramClient = null
+            googleSpeechClient = null
 
             val duration = (System.currentTimeMillis() - sessionStartTime) / 1000L
             _uiState.update { it.copy(isRecording = false, audioLevel = 0f) }
@@ -182,7 +176,7 @@ class SessionViewModel(application: Application) : AndroidViewModel(application)
             val anthropicKey = settings.anthropicApiKey.first()
             var summary = ""
             if (anthropicKey.isNotBlank()) {
-                val transcript = transcriptBuffer.joinToString(" ")
+                val transcript = transcriptBuffer.joinToString(" ") { it.translatedText ?: it.text }
                 try {
                     anthropic.streamCompletion(
                         system = "You are a meeting summarizer. Write a concise 2-3 paragraph summary.",
@@ -197,7 +191,7 @@ class SessionViewModel(application: Application) : AndroidViewModel(application)
                 wordEntries = state.wordEntries,
                 answerEntries = state.answerEntries,
                 questions = state.questions,
-                transcriptExcerpt = transcriptBuffer.takeLast(20).joinToString("\n")
+                transcriptExcerpt = transcriptBuffer.takeLast(20).joinToString("\n") { it.translatedText ?: it.text }
             )
 
             val client = ObsidianClient(obsidianUrl, obsidianKey)
@@ -209,7 +203,7 @@ class SessionViewModel(application: Application) : AndroidViewModel(application)
 
     fun generateQuestions() {
         viewModelScope.launch {
-            val transcript = transcriptBuffer.takeLast(50).joinToString(" ")
+            val transcript = transcriptBuffer.takeLast(50).joinToString(" ") { it.translatedText ?: it.text }
             considerQuestions(transcript, _uiState.value.scenario, previousContext, force = true)
         }
     }
@@ -283,7 +277,7 @@ class SessionViewModel(application: Application) : AndroidViewModel(application)
             durationSeconds = duration,
             summary = state.answerEntries.firstOrNull()?.answer ?: "",
             keyTermsJson = state.wordEntries.joinToString("|") { "${it.term}:${it.definition}" },
-            transcriptExcerpt = transcriptBuffer.takeLast(20).joinToString(" "),
+            transcriptExcerpt = transcriptBuffer.takeLast(20).joinToString(" ") { it.translatedText ?: it.text },
             createdAt = Instant.now().toEpochMilli()
         )
         db.sessionDao().insert(entity)

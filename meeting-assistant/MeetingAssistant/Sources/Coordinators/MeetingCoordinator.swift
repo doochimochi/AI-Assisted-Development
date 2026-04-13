@@ -87,7 +87,7 @@ final class MeetingCoordinator: ObservableObject {
     // MARK: - Main pipeline
 
     private func runPipeline(audioStream: AsyncStream<Data>) async {
-        let engine = DeepgramEngine(apiKey: AppSettings.shared.deepgramApiKey)
+        let engine = GoogleSpeechEngine(apiKey: AppSettings.shared.googleSpeechApiKey)
 
         do {
             try await engine.connect()
@@ -96,7 +96,7 @@ final class MeetingCoordinator: ObservableObject {
             return
         }
 
-        // Send audio data to Deepgram
+        // Send audio data to Google Speech
         let sendTask = Task {
             for await chunk in audioStream {
                 guard !Task.isCancelled else { break }
