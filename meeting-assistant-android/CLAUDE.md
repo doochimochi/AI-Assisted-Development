@@ -5,7 +5,7 @@
 Android standalone app for real-time meeting assistance via phone microphone.
 
 - Records conversation using the device microphone (16kHz, PCM)
-- Streams audio to **Deepgram Nova-3** for real-time STT
+- Sends audio to **Google Cloud Speech-to-Text** for real-time STT
 - 3 AI panels powered by **Claude API** (run in parallel):
   - **Answers** — detects questions → streams Claude answers
   - **Terms** — researches technical words automatically
@@ -22,7 +22,7 @@ Android standalone app for real-time meeting assistance via phone microphone.
 - Android SDK 35 / min SDK 29 (Android 10+)
 - Kotlin 2.0+
 - Physical Android device recommended (microphone + network work better than emulator)
-- Deepgram API key
+- Google Cloud Speech-to-Text API key
 - Anthropic API key
 - Obsidian with [Local REST API plugin](https://github.com/coddingtonbear/obsidian-local-rest-api) on Mac (for Obsidian sync)
 
@@ -77,12 +77,17 @@ In the app: tap **Settings** (⚙) on home screen.
 
 | Key | Where to get |
 |-----|-------------|
-| Anthropic API Key | console.anthropic.com |
-| Deepgram API Key  | console.deepgram.com  |
-| Obsidian API URL  | `http://YOUR_MAC_IP:27123` |
-| Obsidian API Key  | Obsidian → Settings → Local REST API |
+| Anthropic API Key    | console.anthropic.com |
+| Google Speech API Key | console.cloud.google.com → Credentials |
+| Obsidian API URL     | `http://YOUR_MAC_IP:27123` |
+| Obsidian API Key     | Obsidian → Settings → Local REST API |
 
 Keys stored in **DataStore** (encrypted preferences). Never committed to git.
+
+### Google Speech API Key 발급
+1. [console.cloud.google.com](https://console.cloud.google.com) 접속
+2. **APIs & Services → Library → "Cloud Speech-to-Text API"** 검색 → **Enable**
+3. **APIs & Services → Credentials → Create API Key** → 복사 (`AIza...` 형식)
 
 ---
 
@@ -103,8 +108,9 @@ Keys stored in **DataStore** (encrypted preferences). Never committed to git.
 
 ```
 AudioRecorder (AudioRecord, 16kHz PCM, 250ms chunks)
-    → DeepgramClient (OkHttp WebSocket)
+    → GoogleSpeechClient (OkHttp REST, silence-triggered batching)
         → SessionViewModel (coroutines, StateFlow)
+            ├── Translator (Claude Haiku, Korean detection)
             ├── WordResearcher  → AnthropicClient (SSE callbackFlow)
             ├── AnswerFinder    → AnthropicClient (SSE callbackFlow)
             └── QuestionGenerator → AnthropicClient
@@ -116,8 +122,15 @@ AudioRecorder (AudioRecord, 16kHz PCM, 250ms chunks)
             SessionDatabase (Room)
 ```
 
+### STT Design — Google Cloud Speech-to-Text
+`GoogleSpeechClient` accumulates PCM audio chunks from `AudioRecorder`.
+When RMS drops below 0.015 for 0.6 s (silence), it POSTs the buffered audio
+to `speech.googleapis.com/v1/speech:recognize` as base64 LINEAR16.
+Max buffer is 5 s. Results are final only (no partial transcripts).
+
 ### Key Concurrency Rules
 - `AudioRecorder` runs on a background Thread (AudioRecord requires dedicated thread)
+- `GoogleSpeechClient.recognize()` runs on `Dispatchers.IO` via its own `CoroutineScope`
 - All flows collected in `SessionViewModel.viewModelScope`
 - 3 AI features launched with `launch { }` in parallel inside `collect` block
 - `AnthropicClient.streamCompletion()` uses `callbackFlow` — safe to collect from coroutines
@@ -132,7 +145,8 @@ AudioRecorder (AudioRecord, 16kHz PCM, 250ms chunks)
 | `viewmodel/SessionViewModel.kt` | Main orchestrator — wires all components |
 | `viewmodel/SettingsStore.kt` | DataStore persistence for API keys |
 | `audio/AudioRecorder.kt` | Microphone recording (16kHz PCM) |
-| `transcription/DeepgramClient.kt` | WebSocket STT streaming |
+| `transcription/GoogleSpeechClient.kt` | Google Speech REST STT with silence detection |
+| `ai/Translator.kt` | Korean → English via Claude Haiku |
 | `ai/AnthropicClient.kt` | Claude API SSE streaming via callbackFlow |
 | `ai/AiFeatures.kt` | WordResearcher, AnswerFinder, QuestionGenerator |
 | `obsidian/WikiFormatter.kt` | Obsidian Markdown generator |
@@ -146,7 +160,7 @@ AudioRecorder (AudioRecord, 16kHz PCM, 250ms chunks)
 
 1. **Microphone permission denied**: App requests it on session start. If denied, go to System Settings → Apps → Meeting Assistant → Permissions.
 
-2. **Deepgram not connecting**: Check API key and internet. Deepgram requires outbound WebSocket to `api.deepgram.com:443`.
+2. **No transcription appearing**: Check Google Speech API key. Verify **Cloud Speech-to-Text API is enabled** in your GCP project (just creating a key is not enough). Check `speech.googleapis.com:443` outbound is allowed.
 
 3. **Obsidian not reachable**: Mac and Android must be on **same WiFi network**. Check Mac IP and firewall. Test with: `curl -H "Authorization: Bearer KEY" http://MAC_IP:27123/vault/` from your Mac terminal first.
 

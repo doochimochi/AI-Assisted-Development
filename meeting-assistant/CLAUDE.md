@@ -21,7 +21,7 @@ A macOS native overlay app that sits transparently above all windows during onli
 | macOS (dev & target) | 14.0 (Sonoma)+ |
 | Xcode | 15.4+ |
 | Swift | 5.10+ |
-| Hardware | Apple Silicon recommended (ANE for optional on-device STT) |
+| Hardware | Apple Silicon recommended |
 
 ---
 
@@ -40,7 +40,6 @@ and calls `CGRequestScreenCaptureAccess()`.
 
 ### Microphone (entitlement)
 `com.apple.security.device.audio-input` is declared in `MeetingAssistant.entitlements`.
-This is needed if the user opts into mic capture in a future version.
 For current system-audio-only mode, Screen Recording permission is sufficient.
 
 ---
@@ -53,12 +52,16 @@ Store both keys in **Keychain** (production) or as environment variables (debug)
 ```bash
 # For development — set in Xcode scheme's Environment Variables:
 ANTHROPIC_API_KEY=sk-ant-...
-DEEPGRAM_API_KEY=...
+GOOGLE_SPEECH_API_KEY=AIza...
 ```
 
 `AppSettings` reads from `ProcessInfo.processInfo.environment` in DEBUG
-and from Keychain item `com.meetingassistant.anthropic-key` /
-`com.meetingassistant.deepgram-key` in RELEASE.
+and from Keychain items `anthropicApiKey` / `googleSpeechApiKey` in RELEASE.
+
+### Google Speech API Key 발급
+1. [console.cloud.google.com](https://console.cloud.google.com) 접속
+2. **APIs & Services → Library → "Cloud Speech-to-Text API"** 검색 → Enable
+3. **APIs & Services → Credentials → Create API Key** → 복사
 
 ---
 
@@ -91,13 +94,21 @@ xcodebuild test -scheme MeetingAssistant \
 |-------|-----------|
 | SCStream callbacks | `audioQueue` (private serial DispatchQueue) |
 | `AudioBufferProcessor` | Swift `actor` |
-| `DeepgramEngine` | Swift `actor` |
+| `GoogleSpeechEngine` | `final class` (URLSession async/await) |
 | `TranscriptStore` | `@MainActor` |
 | AI feature managers | `@MainActor ObservableObject` |
 | UI views | `@MainActor` (SwiftUI default) |
 
-**Never** call `AnthropicClient` or `DeepgramEngine` from inside an SCStream
+**Never** call `AnthropicClient` or `GoogleSpeechEngine` from inside an SCStream
 delegate callback. Always dispatch via `Task { await ... }`.
+
+### STT Design — Google Cloud Speech-to-Text
+`GoogleSpeechEngine` accumulates PCM audio chunks and uses RMS-based silence
+detection (threshold 0.015, trigger at 0.6 s silence) to decide when to POST
+to `speech.googleapis.com/v1/speech:recognize`. Max buffer is 5 s.
+
+Unlike a WebSocket approach, results are final only (no partial transcripts).
+Language: `en-US` primary, `ko-KR` / `ja-JP` as alternatives.
 
 ### Single Source of Truth
 - All AI prompts live in `AI/PromptTemplates.swift`. Edit prompts there only.
@@ -107,11 +118,10 @@ delegate callback. Always dispatch via `Task { await ... }`.
 ### Concurrency Pattern
 ```swift
 // MeetingCoordinator processes each new transcript segment like this:
-await withTaskGroup(of: Void.self) { group in
-    group.addTask { await self.wordResearcher.analyze(segment) }
-    group.addTask { await self.answerFinder.analyze(recentTranscript) }
-    // QuestionGenerator runs on a 30s timer, not per-segment
-}
+async let wordTask: () = wordResearcher.analyze(segment: updatedSegment, ...)
+async let answerTask: () = answerFinder.analyze(segment: updatedSegment, ...)
+async let questionTask: () = questionGenerator.considerGeneration(...)
+_ = await (wordTask, answerTask, questionTask)
 ```
 
 ### Memory Budget
@@ -167,16 +177,13 @@ AI feature system prompts as a `[Previous context]` block.
 
 | Metric | Target |
 |--------|--------|
-| SCStream → Deepgram first result | < 300 ms |
+| SCStream → Google Speech first result | ~1–2 s (REST round-trip) |
 | Claude API Time-to-First-Token | < 800 ms |
 | Dropped audio chunks | 0 |
-| WebSocket reconnects per hour | < 2 |
-
-A mini dashboard is visible in **Settings › Performance**.
 
 In DEBUG builds, use `os_signpost` intervals to profile in Instruments:
-- `"AudioChunk"` — from SCStream callback to WebSocket send
-- `"STTResult"` — from WebSocket send to TranscriptStore append
+- `"AudioChunk"` — from SCStream callback to GoogleSpeechEngine buffer
+- `"STTResult"` — from recognize() POST to TranscriptStore append
 - `"AIResponse"` — from segment append to first Claude token
 
 ---
@@ -187,15 +194,14 @@ In DEBUG builds, use `os_signpost` intervals to profile in Instruments:
    is denied. Always call `CGPreflightScreenCaptureAccess()` first.
 
 2. **Full-screen meeting apps**: `.floating` window level does not overlay full-screen Zoom/Teams.
-   Instruct users to run meeting apps in **windowed mode**. Document this limitation in README.
+   Instruct users to run meeting apps in **windowed mode**.
 
-3. **WhisperKit model download**: If the user enables offline STT in Settings,
-   WhisperKit downloads ~1.5 GB on first launch. Show a progress view; do not block the UI.
-   (WhisperKit is an optional SPM dependency — not included by default.)
+3. **Google Speech API not enabled**: Create an API key is not enough — the
+   **Cloud Speech-to-Text API must be enabled** in the GCP project. If you get a 403,
+   go to APIs & Services → Library and enable it.
 
-4. **Deepgram WebSocket auth**: Pass the API key as a query parameter
-   `?token=<key>` in the WebSocket URL, not as an HTTP header
-   (URLSessionWebSocketTask does not support upgrade-time headers).
+4. **STT latency vs Deepgram**: Google Speech REST has ~1–2 s round-trip vs Deepgram's
+   ~100 ms WebSocket. Segments appear after silence is detected, not in real-time.
 
 5. **CMSampleBuffer retain cycles**: Always copy PCM data and release the buffer
    before passing data across actor boundaries.
@@ -221,6 +227,5 @@ xcodebuild test -scheme MeetingAssistant -destination 'platform=macOS'
 | *(none)* | All networking via Apple URLSession | ✅ |
 | `argmaxinc/WhisperKit` | Offline STT fallback | ❌ opt-in |
 
-All production networking (Deepgram WebSocket, Claude SSE) uses
-`URLSession` / `URLSessionWebSocketTask` from the Apple SDK.
-No third-party HTTP libraries.
+All production networking (Google Speech REST, Claude SSE) uses
+`URLSession` from the Apple SDK. No third-party HTTP libraries.
