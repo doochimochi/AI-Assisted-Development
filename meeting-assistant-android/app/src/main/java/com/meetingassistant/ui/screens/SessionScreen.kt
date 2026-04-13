@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.meetingassistant.transcription.TranscriptSegment
 import com.meetingassistant.ui.theme.*
 import com.meetingassistant.viewmodel.*
 import kotlinx.coroutines.launch
@@ -208,7 +209,7 @@ private fun QuestionsPanel(suggestions: List<QuestionSuggestion>, onRefresh: () 
 }
 
 @Composable
-private fun TranscriptPanel(transcript: List<String>) {
+private fun TranscriptPanel(transcript: List<TranscriptSegment>) {
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
 
@@ -221,9 +222,36 @@ private fun TranscriptPanel(transcript: List<String>) {
         return
     }
 
-    LazyColumn(state = listState, modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-        items(transcript) { line ->
-            Text(line, fontSize = 12.sp, color = Color.White.copy(alpha = 0.85f), lineHeight = 17.sp)
+    LazyColumn(state = listState, modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        items(transcript) { segment ->
+            val isKorean = segment.detectedLanguage?.startsWith("ko") == true
+                || segment.text.any { it.code in 0xAC00..0xD7A3 }
+            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                // Original text (with flag if Korean)
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    if (isKorean) {
+                        Text("🇰🇷", fontSize = 10.sp)
+                    }
+                    Text(
+                        text = segment.text,
+                        fontSize = 12.sp,
+                        color = if (segment.isPartial) Color.White.copy(alpha = 0.45f) else Color.White.copy(alpha = 0.75f),
+                        lineHeight = 17.sp
+                    )
+                }
+                // English translation (if available)
+                segment.translatedText?.let { translation ->
+                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text("🇺🇸", fontSize = 10.sp)
+                        Text(
+                            text = translation,
+                            fontSize = 12.sp,
+                            color = Color.White.copy(alpha = 0.95f),
+                            lineHeight = 17.sp
+                        )
+                    }
+                }
+            }
         }
     }
 }

@@ -115,11 +115,20 @@ final class MeetingCoordinator: ObservableObject {
                 let scenario = self.scenario
                 let prevCtx = self.previousContext
 
-                // Run all 3 AI features in parallel for each final segment
                 if !segment.isPartial {
-                    async let wordTask: () = wordResearcher.analyze(segment: segment, transcript: transcript, scenario: scenario)
-                    async let answerTask: () = answerFinder.analyze(segment: segment, transcript: transcript, scenario: scenario, previousContext: prevCtx)
-                    async let questionTask: () = questionGenerator.considerGeneration(transcript: transcript, scenario: scenario, previousContext: prevCtx)
+                    // Step 1: Translate if Korean (fast, blocks briefly to get English text for AI)
+                    if segment.isKorean {
+                        if let translation = await Translator.shared.translateToEnglish(segment.text) {
+                            transcriptStore.setTranslation(translation, for: segment.id)
+                        }
+                    }
+
+                    // Step 2: Run all 3 AI features in parallel, using translated text if available
+                    let updatedTranscript = transcriptStore.recentText(approximateTokens: 1500)
+                    let updatedSegment = transcriptStore.segments.first(where: { $0.id == segment.id }) ?? segment
+                    async let wordTask: () = wordResearcher.analyze(segment: updatedSegment, transcript: updatedTranscript, scenario: scenario)
+                    async let answerTask: () = answerFinder.analyze(segment: updatedSegment, transcript: updatedTranscript, scenario: scenario, previousContext: prevCtx)
+                    async let questionTask: () = questionGenerator.considerGeneration(transcript: updatedTranscript, scenario: scenario, previousContext: prevCtx)
                     _ = await (wordTask, answerTask, questionTask)
                 }
             }

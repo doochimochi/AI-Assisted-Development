@@ -10,7 +10,12 @@ import kotlinx.coroutines.flow.asSharedFlow
 import okhttp3.*
 import okio.ByteString.Companion.toByteString
 
-data class TranscriptSegment(val text: String, val isPartial: Boolean)
+data class TranscriptSegment(
+    val text: String,
+    val isPartial: Boolean,
+    val detectedLanguage: String? = null,  // e.g. "ko", "en" from Deepgram
+    val translatedText: String? = null     // populated async after translation
+)
 
 class DeepgramClient(private val apiKey: String) {
     private val moshi = Moshi.Builder().build()
@@ -66,8 +71,11 @@ class DeepgramClient(private val apiKey: String) {
                 val response = responseAdapter.fromJson(text) ?: return
                 val transcript = response.channel?.alternatives?.firstOrNull()?.transcript ?: return
                 if (transcript.isBlank()) return
-                val isPartial = response.isFinal != true
-                _transcriptFlow.tryEmit(TranscriptSegment(transcript, isPartial))
+                _transcriptFlow.tryEmit(TranscriptSegment(
+                    text = transcript,
+                    isPartial = response.isFinal != true,
+                    detectedLanguage = response.channel?.detectedLanguage
+                ))
             } catch (_: Exception) {}
         }
 
@@ -85,7 +93,8 @@ data class DeepgramResponse(
 
 @JsonClass(generateAdapter = true)
 data class DeepgramChannel(
-    val alternatives: List<DeepgramAlternative>?
+    val alternatives: List<DeepgramAlternative>?,
+    @Json(name = "detected_language") val detectedLanguage: String? = null
 )
 
 @JsonClass(generateAdapter = true)

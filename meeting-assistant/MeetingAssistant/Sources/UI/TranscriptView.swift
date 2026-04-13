@@ -6,13 +6,31 @@ struct TranscriptView: View {
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView(.vertical, showsIndicators: false) {
-                LazyVStack(alignment: .leading, spacing: 4) {
+                LazyVStack(alignment: .leading, spacing: 6) {
                     ForEach(store.segments) { segment in
-                        Text(segment.text)
-                            .font(.system(size: 12))
-                            .foregroundColor(segment.isPartial ? .white.opacity(0.5) : .white.opacity(0.9))
-                            .fixedSize(horizontal: false, vertical: true)
-                            .id(segment.id)
+                        VStack(alignment: .leading, spacing: 2) {
+                            // Original text
+                            HStack(spacing: 4) {
+                                if segment.isKorean {
+                                    Text("🇰🇷").font(.system(size: 10))
+                                }
+                                Text(segment.text)
+                                    .font(.system(size: 12))
+                                    .foregroundColor(segment.isPartial ? .white.opacity(0.45) : .white.opacity(0.75))
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                            // English translation (if available)
+                            if let translation = segment.translatedText {
+                                HStack(spacing: 4) {
+                                    Text("🇺🇸").font(.system(size: 10))
+                                    Text(translation)
+                                        .font(.system(size: 12))
+                                        .foregroundColor(.white.opacity(0.95))
+                                        .fixedSize(horizontal: false, vertical: true)
+                                }
+                            }
+                        }
+                        .id(segment.id)
                     }
                 }
                 .padding(.horizontal, 4)

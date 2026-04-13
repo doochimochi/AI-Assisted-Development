@@ -4,10 +4,13 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.meetingassistant.MeetingAssistantApp
+import com.meetingassistant.transcription.TranscriptSegment
 import com.meetingassistant.ai.AnswerFinder
 import com.meetingassistant.ai.AnthropicClient
 import com.meetingassistant.ai.QuestionGenerator
+import com.meetingassistant.ai.Translator
 import com.meetingassistant.ai.WordResearcher
+import com.meetingassistant.ai.isKorean
 import com.meetingassistant.audio.AudioRecorder
 import com.meetingassistant.memory.SessionEntity
 import com.meetingassistant.obsidian.ObsidianClient
@@ -30,7 +33,7 @@ enum class ScenarioType(val displayName: String, val emoji: String) {
 data class SessionUiState(
     val isRecording: Boolean = false,
     val scenario: ScenarioType = ScenarioType.TEAM,
-    val transcript: List<String> = emptyList(),
+    val transcript: List<TranscriptSegment> = emptyList(),
     val wordEntries: List<WordEntry> = emptyList(),
     val answerEntries: List<AnswerEntry> = emptyList(),
     val questions: List<QuestionSuggestion> = emptyList(),
@@ -48,6 +51,7 @@ class SessionViewModel(application: Application) : AndroidViewModel(application)
     private val settings = SettingsStore(application)
     private val db = (application as MeetingAssistantApp).database
     private val anthropic by lazy { AnthropicClient(settings) }
+    private val translator by lazy { Translator(settings) }
     private val wordResearcher by lazy { WordResearcher(anthropic) }
     private val answerFinder by lazy { AnswerFinder(anthropic) }
     private val questionGenerator by lazy { QuestionGenerator(anthropic) }
@@ -108,22 +112,33 @@ class SessionViewModel(application: Application) : AndroidViewModel(application)
                     }
                 }
 
-                // Process transcripts → AI in parallel
+                // Process transcripts → translate if Korean → AI in parallel
                 client.transcriptFlow.collect { segment ->
                     if (!segment.isPartial) {
-                        transcriptBuffer.add(segment.text)
+                        // Step 1: Translate Korean → English (fast, Haiku ~300ms)
+                        val isKorean = segment.detectedLanguage?.startsWith("ko") == true
+                            || segment.text.isKorean()
+                        val translatedSegment = if (isKorean) {
+                            val translation = translator.translateToEnglish(segment.text)
+                            segment.copy(translatedText = translation)
+                        } else segment
+
+                        // Step 2: Update transcript list (show original + translation)
+                        transcriptBuffer.add(translatedSegment)
                         if (transcriptBuffer.size > 200) transcriptBuffer.removeAt(0)
 
                         _uiState.update { state ->
                             state.copy(transcript = transcriptBuffer.takeLast(50).toList())
                         }
 
-                        val recentText = transcriptBuffer.takeLast(50).joinToString(" ")
+                        // Step 3: AI features use English text (translated or original)
+                        val textForAI = translatedSegment.translatedText ?: translatedSegment.text
+                        val recentText = transcriptBuffer.takeLast(50)
+                            .joinToString(" ") { it.translatedText ?: it.text }
                         val ctx = previousContext
 
-                        // Run 3 AI features concurrently
-                        launch { processWordResearch(segment.text, recentText, scenario) }
-                        launch { processAnswerFinding(segment.text, recentText, scenario, ctx) }
+                        launch { processWordResearch(textForAI, recentText, scenario) }
+                        launch { processAnswerFinding(textForAI, recentText, scenario, ctx) }
                         launch { considerQuestions(recentText, scenario, ctx) }
                     }
                 }

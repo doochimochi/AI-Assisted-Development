@@ -98,7 +98,8 @@ final class DeepgramEngine: TranscriptionEngine {
 
         return TranscriptSegment(
             text: alternative.transcript,
-            isPartial: !(response.isFinal ?? true)
+            isPartial: !(response.isFinal ?? true),
+            detectedLanguage: response.channel?.detectedLanguage
         )
     }
 
@@ -127,6 +128,12 @@ private struct DeepgramResponse: Decodable {
 
 private struct DeepgramChannel: Decodable {
     let alternatives: [DeepgramAlternative]?
+    let detectedLanguage: String?
+
+    enum CodingKeys: String, CodingKey {
+        case alternatives
+        case detectedLanguage = "detected_language"
+    }
 }
 
 private struct DeepgramAlternative: Decodable {

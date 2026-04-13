@@ -34,10 +34,17 @@ final class TranscriptStore: ObservableObject {
         lastFinalSegment = nil
     }
 
-    // Returns recent transcript as plain text, limited to ~tokenLimit tokens (≈ chars/4)
+    /// Stores the translated text for a given segment id (called async after translation)
+    func setTranslation(_ translation: String, for segmentId: UUID) {
+        if let idx = segments.firstIndex(where: { $0.id == segmentId }) {
+            segments[idx].translatedText = translation
+        }
+    }
+
+    // Returns recent transcript as plain text — uses translated text for AI where available
     func recentText(approximateTokens: Int = 1500) -> String {
         let charLimit = approximateTokens * 4
-        let full = segments.filter { !$0.isPartial }.map(\.text).joined(separator: " ")
+        let full = segments.filter { !$0.isPartial }.map(\.textForAI).joined(separator: " ")
         if full.count <= charLimit { return full }
         return String(full.suffix(charLimit))
     }
