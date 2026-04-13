@@ -1,8 +1,16 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     kotlin("kapt")
+}
+
+// Load API keys from local.properties (git-ignored)
+val localProps = Properties().also { props ->
+    rootProject.file("local.properties").takeIf { it.exists() }
+        ?.inputStream()?.use(props::load)
 }
 
 android {
@@ -17,10 +25,25 @@ android {
         versionName = "1.0"
     }
 
+    buildFeatures {
+        compose = true
+        buildConfig = true  // enables BuildConfig generation
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            buildConfigField("String", "ANTHROPIC_API_KEY",
+                "\"${localProps["ANTHROPIC_API_KEY"] ?: ""}\"")
+            buildConfigField("String", "GOOGLE_SPEECH_API_KEY",
+                "\"${localProps["GOOGLE_SPEECH_API_KEY"] ?: ""}\"")
+        }
+        debug {
+            buildConfigField("String", "ANTHROPIC_API_KEY",
+                "\"${localProps["ANTHROPIC_API_KEY"] ?: ""}\"")
+            buildConfigField("String", "GOOGLE_SPEECH_API_KEY",
+                "\"${localProps["GOOGLE_SPEECH_API_KEY"] ?: ""}\"")
         }
     }
     compileOptions {
@@ -28,7 +51,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions { jvmTarget = "17" }
-    buildFeatures { compose = true }
 }
 
 dependencies {

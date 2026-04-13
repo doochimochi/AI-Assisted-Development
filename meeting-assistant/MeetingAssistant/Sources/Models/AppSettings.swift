@@ -25,10 +25,15 @@ final class AppSettings: ObservableObject {
         useCloudSTT = defaults.object(forKey: "useCloudSTT") as? Bool ?? true
         autoSaveSession = defaults.object(forKey: "autoSaveSession") as? Bool ?? true
         maxTranscriptMinutes = defaults.integer(forKey: "maxTranscriptMinutes").nonZeroOr(10)
+        // Priority: Keychain (user override) > env var (dev) > Info.plist (build-time default)
         anthropicApiKey = readFromKeychain(service: "MeetingAssistant", account: "anthropicApiKey")
-            ?? ProcessInfo.processInfo.environment["ANTHROPIC_API_KEY"] ?? ""
+            ?? ProcessInfo.processInfo.environment["ANTHROPIC_API_KEY"]
+            ?? Bundle.main.infoDictionary?["ANTHROPIC_API_KEY"] as? String
+            ?? ""
         googleSpeechApiKey = readFromKeychain(service: "MeetingAssistant", account: "googleSpeechApiKey")
-            ?? ProcessInfo.processInfo.environment["GOOGLE_SPEECH_API_KEY"] ?? ""
+            ?? ProcessInfo.processInfo.environment["GOOGLE_SPEECH_API_KEY"]
+            ?? Bundle.main.infoDictionary?["GOOGLE_SPEECH_API_KEY"] as? String
+            ?? ""
     }
 
     func save() {

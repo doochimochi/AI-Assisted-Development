@@ -26,6 +26,9 @@ targets:
       path: Resources/Info.plist
     entitlements:
       path: Resources/MeetingAssistant.entitlements
+    configFiles:
+      Debug: Keys.xcconfig
+      Release: Keys.xcconfig
     settings:
       base:
         INFOPLIST_FILE: Resources/Info.plist
