@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>Meeting Assistant</string>
+
+    <key>CFBundleIdentifier</key>
+    <string>com.meetingassistant</string>
+
+    <key>CFBundleShortVersionString</key>
+    <string>1.0.0</string>
+
+    <key>CFBundleVersion</key>
+    <string>1</string>
+
+    <key>LSMinimumSystemVersion</key>
+    <string>14.0</string>
+
+    <key>LSUIElement</key>
+    <true/>  <!-- Runs as agent (status bar only, no Dock icon) -->
+
+    <!-- Privacy descriptions shown in System Settings -->
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Meeting Assistant can optionally capture your microphone for personal transcription (not required for system audio mode).</string>
+
+    <key>NSScreenCaptureDescription</key>
+    <string>Meeting Assistant needs Screen Recording permission to capture system audio from your meetings via ScreenCaptureKit.</string>
+
+    <!-- Allow App Transport Security for localhost dev server if needed -->
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <false/>
+    </dict>
+</dict>
+</plist>

@@ -1,0 +1,501 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AA000001 /* MeetingAssistantApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100001 /* MeetingAssistantApp.swift */; };
+		AA000002 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100002 /* AppDelegate.swift */; };
+		AA000010 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100010 /* AppSettings.swift */; };
+		AA000011 /* TranscriptSegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100011 /* TranscriptSegment.swift */; };
+		AA000012 /* WordEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100012 /* WordEntry.swift */; };
+		AA000013 /* AnswerEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100013 /* AnswerEntry.swift */; };
+		AA000014 /* QuestionSuggestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100014 /* QuestionSuggestion.swift */; };
+		AA000020 /* AudioCaptureManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100020 /* AudioCaptureManager.swift */; };
+		AA000021 /* AudioBufferProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100021 /* AudioBufferProcessor.swift */; };
+		AA000022 /* AudioPermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100022 /* AudioPermissionManager.swift */; };
+		AA000030 /* TranscriptionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100030 /* TranscriptionEngine.swift */; };
+		AA000031 /* DeepgramEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100031 /* DeepgramEngine.swift */; };
+		AA000032 /* TranscriptStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100032 /* TranscriptStore.swift */; };
+		AA000040 /* AnthropicClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100040 /* AnthropicClient.swift */; };
+		AA000041 /* PromptTemplates.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100041 /* PromptTemplates.swift */; };
+		AA000042 /* WordResearcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100042 /* WordResearcher.swift */; };
+		AA000043 /* AnswerFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100043 /* AnswerFinder.swift */; };
+		AA000044 /* QuestionGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100044 /* QuestionGenerator.swift */; };
+		AA000050 /* MemoryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100050 /* MemoryModels.swift */; };
+		AA000051 /* SessionMemoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100051 /* SessionMemoryManager.swift */; };
+		AA000052 /* ContextMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100052 /* ContextMatcher.swift */; };
+		AA000060 /* ScenarioConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100060 /* ScenarioConfig.swift */; };
+		AA000070 /* MeetingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100070 /* MeetingCoordinator.swift */; };
+		AA000080 /* OverlayWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100080 /* OverlayWindow.swift */; };
+		AA000081 /* OverlayWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100081 /* OverlayWindowController.swift */; };
+		AA000082 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100082 /* ContentView.swift */; };
+		AA000083 /* TranscriptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100083 /* TranscriptView.swift */; };
+		AA000084 /* WordResearchPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100084 /* WordResearchPanel.swift */; };
+		AA000085 /* AnswerFinderPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100085 /* AnswerFinderPanel.swift */; };
+		AA000086 /* QuestionPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100086 /* QuestionPanel.swift */; };
+		AA000087 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100087 /* SettingsView.swift */; };
+		AA000088 /* VisualEffectBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100088 /* VisualEffectBackground.swift */; };
+		AA000089 /* StreamingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100089 /* StreamingTextView.swift */; };
+		AA000090 /* PanelCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100090 /* PanelCard.swift */; };
+		AA000091 /* StatusIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100091 /* StatusIndicator.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		AA100001 /* MeetingAssistantApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingAssistantApp.swift; sourceTree = "<group>"; };
+		AA100002 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		AA100003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA100010 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		AA100011 /* TranscriptSegment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptSegment.swift; sourceTree = "<group>"; };
+		AA100012 /* WordEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordEntry.swift; sourceTree = "<group>"; };
+		AA100013 /* AnswerEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerEntry.swift; sourceTree = "<group>"; };
+		AA100014 /* QuestionSuggestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionSuggestion.swift; sourceTree = "<group>"; };
+		AA100020 /* AudioCaptureManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCaptureManager.swift; sourceTree = "<group>"; };
+		AA100021 /* AudioBufferProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioBufferProcessor.swift; sourceTree = "<group>"; };
+		AA100022 /* AudioPermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPermissionManager.swift; sourceTree = "<group>"; };
+		AA100030 /* TranscriptionEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionEngine.swift; sourceTree = "<group>"; };
+		AA100031 /* DeepgramEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepgramEngine.swift; sourceTree = "<group>"; };
+		AA100032 /* TranscriptStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptStore.swift; sourceTree = "<group>"; };
+		AA100040 /* AnthropicClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnthropicClient.swift; sourceTree = "<group>"; };
+		AA100041 /* PromptTemplates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptTemplates.swift; sourceTree = "<group>"; };
+		AA100042 /* WordResearcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordResearcher.swift; sourceTree = "<group>"; };
+		AA100043 /* AnswerFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerFinder.swift; sourceTree = "<group>"; };
+		AA100044 /* QuestionGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionGenerator.swift; sourceTree = "<group>"; };
+		AA100050 /* MemoryModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryModels.swift; sourceTree = "<group>"; };
+		AA100051 /* SessionMemoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionMemoryManager.swift; sourceTree = "<group>"; };
+		AA100052 /* ContextMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMatcher.swift; sourceTree = "<group>"; };
+		AA100060 /* ScenarioConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioConfig.swift; sourceTree = "<group>"; };
+		AA100070 /* MeetingCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingCoordinator.swift; sourceTree = "<group>"; };
+		AA100080 /* OverlayWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindow.swift; sourceTree = "<group>"; };
+		AA100081 /* OverlayWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindowController.swift; sourceTree = "<group>"; };
+		AA100082 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		AA100083 /* TranscriptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptView.swift; sourceTree = "<group>"; };
+		AA100084 /* WordResearchPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordResearchPanel.swift; sourceTree = "<group>"; };
+		AA100085 /* AnswerFinderPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerFinderPanel.swift; sourceTree = "<group>"; };
+		AA100086 /* QuestionPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionPanel.swift; sourceTree = "<group>"; };
+		AA100087 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		AA100088 /* VisualEffectBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectBackground.swift; sourceTree = "<group>"; };
+		AA100089 /* StreamingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamingTextView.swift; sourceTree = "<group>"; };
+		AA100090 /* PanelCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelCard.swift; sourceTree = "<group>"; };
+		AA100091 /* StatusIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusIndicator.swift; sourceTree = "<group>"; };
+		AA100099 /* MeetingAssistant.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MeetingAssistant.entitlements; sourceTree = "<group>"; };
+		AAPP0001 /* MeetingAssistant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeetingAssistant.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AABP0001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AAGR0000 /* MeetingAssistant */ = {
+			isa = PBXGroup;
+			children = (
+				AAGR0001 /* App */,
+				AAGR0002 /* Models */,
+				AAGR0003 /* Audio */,
+				AAGR0004 /* Transcription */,
+				AAGR0005 /* AI */,
+				AAGR0006 /* Memory */,
+				AAGR0007 /* Scenarios */,
+				AAGR0008 /* Coordinators */,
+				AAGR0009 /* UI */,
+				AAGR0010 /* Resources */,
+			);
+			path = MeetingAssistant;
+			sourceTree = "<group>";
+		};
+		AAGR0001 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				AA100001 /* MeetingAssistantApp.swift */,
+				AA100002 /* AppDelegate.swift */,
+				AA100003 /* Info.plist */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		AAGR0002 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AA100010 /* AppSettings.swift */,
+				AA100011 /* TranscriptSegment.swift */,
+				AA100012 /* WordEntry.swift */,
+				AA100013 /* AnswerEntry.swift */,
+				AA100014 /* QuestionSuggestion.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		AAGR0003 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				AA100020 /* AudioCaptureManager.swift */,
+				AA100021 /* AudioBufferProcessor.swift */,
+				AA100022 /* AudioPermissionManager.swift */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		AAGR0004 /* Transcription */ = {
+			isa = PBXGroup;
+			children = (
+				AA100030 /* TranscriptionEngine.swift */,
+				AA100031 /* DeepgramEngine.swift */,
+				AA100032 /* TranscriptStore.swift */,
+			);
+			path = Transcription;
+			sourceTree = "<group>";
+		};
+		AAGR0005 /* AI */ = {
+			isa = PBXGroup;
+			children = (
+				AA100040 /* AnthropicClient.swift */,
+				AA100041 /* PromptTemplates.swift */,
+				AA100042 /* WordResearcher.swift */,
+				AA100043 /* AnswerFinder.swift */,
+				AA100044 /* QuestionGenerator.swift */,
+			);
+			path = AI;
+			sourceTree = "<group>";
+		};
+		AAGR0006 /* Memory */ = {
+			isa = PBXGroup;
+			children = (
+				AA100050 /* MemoryModels.swift */,
+				AA100051 /* SessionMemoryManager.swift */,
+				AA100052 /* ContextMatcher.swift */,
+			);
+			path = Memory;
+			sourceTree = "<group>";
+		};
+		AAGR0007 /* Scenarios */ = {
+			isa = PBXGroup;
+			children = (
+				AA100060 /* ScenarioConfig.swift */,
+			);
+			path = Scenarios;
+			sourceTree = "<group>";
+		};
+		AAGR0008 /* Coordinators */ = {
+			isa = PBXGroup;
+			children = (
+				AA100070 /* MeetingCoordinator.swift */,
+			);
+			path = Coordinators;
+			sourceTree = "<group>";
+		};
+		AAGR0009 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				AA100080 /* OverlayWindow.swift */,
+				AA100081 /* OverlayWindowController.swift */,
+				AA100082 /* ContentView.swift */,
+				AA100083 /* TranscriptView.swift */,
+				AA100084 /* WordResearchPanel.swift */,
+				AA100085 /* AnswerFinderPanel.swift */,
+				AA100086 /* QuestionPanel.swift */,
+				AA100087 /* SettingsView.swift */,
+				AAGR0009C /* Components */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		AAGR0009C /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				AA100088 /* VisualEffectBackground.swift */,
+				AA100089 /* StreamingTextView.swift */,
+				AA100090 /* PanelCard.swift */,
+				AA100091 /* StatusIndicator.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		AAGR0010 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				AA100099 /* MeetingAssistant.entitlements */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		AAGRROOT /* root */ = {
+			isa = PBXGroup;
+			children = (
+				AAGR0000 /* MeetingAssistant */,
+				AAGRPROD /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AAGRPROD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AAPP0001 /* MeetingAssistant.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AATG0001 /* MeetingAssistant */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AACL0002 /* Build configuration list for PBXNativeTarget "MeetingAssistant" */;
+			buildPhases = (
+				AABP0001 /* Frameworks */,
+				AASP0001 /* Sources */,
+				AARP0001 /* Resources */,
+			);
+			buildRules = ();
+			dependencies = ();
+			name = MeetingAssistant;
+			productName = MeetingAssistant;
+			productReference = AAPP0001 /* MeetingAssistant.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AAPR0001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					AATG0001 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+				};
+			};
+			buildConfigurationList = AACL0001 /* Build configuration list for PBXProject "MeetingAssistant" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (en, Base);
+			mainGroup = AAGRROOT;
+			productRefGroup = AAGRPROD /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (AATG0001 /* MeetingAssistant */);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AARP0001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AASP0001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000001 /* MeetingAssistantApp.swift in Sources */,
+				AA000002 /* AppDelegate.swift in Sources */,
+				AA000010 /* AppSettings.swift in Sources */,
+				AA000011 /* TranscriptSegment.swift in Sources */,
+				AA000012 /* WordEntry.swift in Sources */,
+				AA000013 /* AnswerEntry.swift in Sources */,
+				AA000014 /* QuestionSuggestion.swift in Sources */,
+				AA000020 /* AudioCaptureManager.swift in Sources */,
+				AA000021 /* AudioBufferProcessor.swift in Sources */,
+				AA000022 /* AudioPermissionManager.swift in Sources */,
+				AA000030 /* TranscriptionEngine.swift in Sources */,
+				AA000031 /* DeepgramEngine.swift in Sources */,
+				AA000032 /* TranscriptStore.swift in Sources */,
+				AA000040 /* AnthropicClient.swift in Sources */,
+				AA000041 /* PromptTemplates.swift in Sources */,
+				AA000042 /* WordResearcher.swift in Sources */,
+				AA000043 /* AnswerFinder.swift in Sources */,
+				AA000044 /* QuestionGenerator.swift in Sources */,
+				AA000050 /* MemoryModels.swift in Sources */,
+				AA000051 /* SessionMemoryManager.swift in Sources */,
+				AA000052 /* ContextMatcher.swift in Sources */,
+				AA000060 /* ScenarioConfig.swift in Sources */,
+				AA000070 /* MeetingCoordinator.swift in Sources */,
+				AA000080 /* OverlayWindow.swift in Sources */,
+				AA000081 /* OverlayWindowController.swift in Sources */,
+				AA000082 /* ContentView.swift in Sources */,
+				AA000083 /* TranscriptView.swift in Sources */,
+				AA000084 /* WordResearchPanel.swift in Sources */,
+				AA000085 /* AnswerFinderPanel.swift in Sources */,
+				AA000086 /* QuestionPanel.swift in Sources */,
+				AA000087 /* SettingsView.swift in Sources */,
+				AA000088 /* VisualEffectBackground.swift in Sources */,
+				AA000089 /* StreamingTextView.swift in Sources */,
+				AA000090 /* PanelCard.swift in Sources */,
+				AA000091 /* StatusIndicator.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		AACF0001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("DEBUG=1", "$(inherited)");
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		AACF0002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		AACF0003 /* Debug - Target */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MeetingAssistant/Resources/MeetingAssistant.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = MeetingAssistant/App/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/../Frameworks");
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meetingassistant;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		AACF0004 /* Release - Target */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MeetingAssistant/Resources/MeetingAssistant.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = MeetingAssistant/App/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/../Frameworks");
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meetingassistant;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AACL0001 /* Build configuration list for PBXProject "MeetingAssistant" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AACF0001 /* Debug */,
+				AACF0002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AACL0002 /* Build configuration list for PBXNativeTarget "MeetingAssistant" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AACF0003 /* Debug - Target */,
+				AACF0004 /* Release - Target */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+	};
+	rootObject = AAPR0001 /* Project object */;
+}

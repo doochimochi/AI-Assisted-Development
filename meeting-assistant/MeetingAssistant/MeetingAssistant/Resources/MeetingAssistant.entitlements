@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- App Sandbox required for Mac App Store distribution -->
+    <key>com.apple.security.app-sandbox</key>
+    <true/>
+
+    <!-- Microphone access (for future mic capture feature) -->
+    <key>com.apple.security.device.audio-input</key>
+    <true/>
+
+    <!-- Outbound network connections: Claude API + Deepgram WebSocket -->
+    <key>com.apple.security.network.client</key>
+    <true/>
+
+    <!-- Keychain access for storing API keys -->
+    <key>keychain-access-groups</key>
+    <array>
+        <string>$(AppIdentifierPrefix)com.meetingassistant</string>
+    </array>
+
+    <!-- Screen Recording permission is NOT an entitlement.
+         It requires runtime user grant via System Settings > Privacy & Security > Screen Recording.
+         The app requests it via CGRequestScreenCaptureAccess(). -->
+</dict>
+</plist>

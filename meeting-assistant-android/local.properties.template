@@ -1,0 +1,14 @@
+# Copy this file to local.properties and fill in your API keys.
+# local.properties is git-ignored — keys are embedded at build time into the APK.
+#
+# Android SDK path (Android Studio sets this automatically):
+sdk.dir=/Users/YOUR_USERNAME/Library/Android/sdk
+
+# Anthropic API key (console.anthropic.com)
+ANTHROPIC_API_KEY=sk-ant-...
+
+# Google Cloud Speech-to-Text API key
+# 1. console.cloud.google.com → APIs & Services → Library
+# 2. Search "Cloud Speech-to-Text API" → Enable
+# 3. APIs & Services → Credentials → Create API Key
+GOOGLE_SPEECH_API_KEY=AIza...

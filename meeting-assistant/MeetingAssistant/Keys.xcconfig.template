@@ -1,0 +1,11 @@
+// Copy this file to Keys.xcconfig and fill in your API keys.
+// Keys.xcconfig is git-ignored — keys are embedded at build time into the .app bundle.
+//
+// Anthropic API key (console.anthropic.com)
+ANTHROPIC_API_KEY = sk-ant-api03-...
+
+// Google Cloud Speech-to-Text API key
+// 1. console.cloud.google.com → APIs & Services → Library
+// 2. Search "Cloud Speech-to-Text API" → Enable
+// 3. APIs & Services → Credentials → Create API Key
+GOOGLE_SPEECH_API_KEY = AIza...
